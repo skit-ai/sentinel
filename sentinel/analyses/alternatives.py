@@ -2,10 +2,11 @@ from typing import List
 
 import pandas as pd
 
-from sentinel.analyses.base import Analysis
+from sentinel.analyses.base import AnalysisBase, AnalysisFactory
 
 
-class AlternativesFilter(Analysis):
+@AnalysisFactory.register(name="no_alternatives", description="Turns with no alternatives")
+class AlternativesFilter(AnalysisBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -14,7 +15,7 @@ class AlternativesFilter(Analysis):
 
     def process(self, df: pd.DataFrame):
         df = self.annotate(df, df.alternatives,
-                           self._get_none_alternatives, "annotation")
+                           self._get_none_alternatives, "no_alternatives")
 
         return df
 

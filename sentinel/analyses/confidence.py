@@ -2,10 +2,11 @@ from typing import List
 
 import pandas as pd
 
-from sentinel.analyses.base import Analysis
+from sentinel.analyses.base import AnalysisBase, AnalysisFactory
 
 
-class ConfidenceFilter(Analysis):
+@AnalysisFactory.register(name="low_confidence", description="Low confidence turns")
+class ConfidenceFilter(AnalysisBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -14,7 +15,7 @@ class ConfidenceFilter(Analysis):
 
     def process(self, df: pd.DataFrame):
         df = self.annotate(df, df.alternatives,
-                           self._get_low_confidence, "new_annotation")
+                           self._get_low_confidence, "low_confidence")
 
         return df
 
