@@ -41,7 +41,7 @@ class CSVReader(Reader):
         return df
 
     def read(self):
-        df = pd.read_csv(self.path)
+        df = pd.read_csv(self.path, encoding="utf-8")
         df = self._post_read(df)
 
         return df
