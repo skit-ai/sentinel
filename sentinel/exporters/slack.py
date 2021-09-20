@@ -5,7 +5,7 @@ from typing import List
 import pandas as pd
 import requests
 
-import sentinel.exporters.util as util
+import sentinel.util as util
 from sentinel.exporters.csv import CSVExporter
 
 
