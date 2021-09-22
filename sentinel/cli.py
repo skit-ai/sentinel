@@ -40,9 +40,11 @@ def main():
             return None
 
         # Collect filters from factory to run
-        filter = AnalysisFactory.create_executor(filters[0])
+        filter = AnalysisFactory.create_executor(
+            filters[0], **config["filters"][filters[0]].get("kwargs", {}))
         for category in filters[1:]:
-            filter.successor = AnalysisFactory.create_executor(category)
+            filter.successor = AnalysisFactory.create_executor(
+                category, **config["filters"][category].get("kwargs", {}))
 
         # Start execution of analysis functions
         df = filter.handle(df)
