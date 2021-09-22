@@ -12,6 +12,7 @@ import io
 from docopt import docopt
 
 import yaml
+from tabulate import tabulate
 
 import sentinel.util as util
 from sentinel.analyses.base import AnalysisFactory
@@ -53,6 +54,8 @@ def main():
 
     elif args["list"]:
         print("Available analysis functions:\n")
+        headers = ["filters", "description"]
+        table_data = []
         for name, factory_item in AnalysisFactory.registry.items():
-            print(f"{name}: {factory_item.get('description')}")
-
+            table_data.append((name, factory_item.get('description')))
+        print(tabulate(table_data, headers, tablefmt="pretty", colalign=("left",)))
