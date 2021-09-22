@@ -1,4 +1,7 @@
-from typing import List
+"""
+Filters to flag out low confidence calls.
+"""
+from typing import List, Dict, Union
 
 import pandas as pd
 
@@ -15,13 +18,22 @@ class ConfidenceFilter(AnalysisBase):
     def preprocess(self, df: pd.DataFrame):
         raise NotImplementedError
 
-    def process(self, df: pd.DataFrame):
+    def process(self, df: pd.DataFrame) -> pd.DataFrame:
         df = self.annotate(df, df.alternatives,
                            self._get_low_confidence, "low_confidence")
 
         return df
 
-    def _get_low_confidence(self, item: List):
+    def _get_low_confidence(self, item: List) -> Union[Dict[str, float], None]:
+        """
+        Flag turn if alternatives list has confidence less than some threshold.
+
+        Parameters:
+            item (list): Alternatives list.
+
+        Returns:
+            Metadata dict with annotation.
+        """
         if not item:
             return None
 

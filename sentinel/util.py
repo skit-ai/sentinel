@@ -3,13 +3,17 @@ import boto3
 from botocore.exceptions import ClientError
 
 
-def upload_file(fp, bucket, object_name):
-    """Upload a file to an S3 bucket
+def upload_file(fp, bucket: str, object_name: str) -> bool:
+    """
+    Upload a file to an S3 bucket.
 
-    :param fp: File to upload
-    :param bucket: Bucket to upload to
-    :param object_name: S3 object name. If not specified then file_name is used
-    :return: True if file was uploaded, else False
+    Parameters:
+        fp: File to upload.
+        bucket (str): Bucket to upload to.
+        object_name (str): S3 object name.
+
+    Returns:
+        True if file was uploaded, else False.
     """
 
     # Upload the file
@@ -26,7 +30,13 @@ def upload_file(fp, bucket, object_name):
     return True
 
 
-def download_file(s3_path):
+def download_file(s3_path: str) -> None:
+    """
+    Download file from S3 bucket.
+
+    Parameters:
+        s3_path (str): S3 object name
+    """
     s3_path_split = s3_path.split("/")
     bucket = s3_path_split[2]
     object_name = "/".join(s3_path_split[3:])

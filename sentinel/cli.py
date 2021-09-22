@@ -55,9 +55,10 @@ def main():
             slack_exporter.export_report(df, filters)
 
     elif args["list"]:
-        print("Available analysis functions:\n")
         headers = ["filters", "description"]
         table_data = []
         for name, factory_item in AnalysisFactory.registry.items():
             table_data.append((name, factory_item.get('description')))
+
+        print("Available analysis functions:\n")
         print(tabulate(table_data, headers, tablefmt="pretty", colalign=("left",)))

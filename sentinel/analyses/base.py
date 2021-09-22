@@ -1,19 +1,33 @@
-"""
-Base class for all monitoring and analysis plugins
-"""
-from typing import Optional, Callable
+from typing import Callable
 from abc import ABC, abstractmethod
 
 import pandas as pd
 
-from sentinel.types import T
-
 
 class AnalysisBase(ABC):
-    def __init__(self, successor: Optional[T] = None, **kwargs):
+    """
+    Base class for anomaly filters.
+
+    Attributes:
+        successor (AnalysisBase): filter function instances implemented from
+                                  this base class.
+
+    Methods:
+        handle(df: pd.DataFrame): Calls filter functions chained as its successor.
+        preprocess(df: pd.DataFrame): :TODO:
+        process(df: pd.DataFrame): Process serving sample (untagged call/turn dataframe).
+    """
+
+    def __init__(self, successor: "AnalysisBase" = None, **kwargs):
         self.successor = successor
 
     def handle(self, df: pd.DataFrame):
+        """
+        Calls filter functions chained as its successor.
+
+        Parameters:
+            df (pd.DataFrame): dataframe.
+        """
         df = self.process(df)
         if self.successor:
             self.successor.handle(df)
@@ -25,11 +39,29 @@ class AnalysisBase(ABC):
 
     @abstractmethod
     def process(self, df: pd.DataFrame):
+        """
+        Process serving sample (untagged call/turn dataframe).
+
+        Parameters:
+            df (pd.DataFrame): serving sample dataframe.
+        """
         pass
 
     def annotate(self, df: pd.DataFrame,
                  df_series: pd.Series,
                  func: Callable, annotation: str) -> pd.DataFrame:
+        """
+        Annotate dataframe elements by running it through an annotation function.
+
+        Parameters:
+            df (pd.DataFrame): serving sample dataframe.
+            df_series (pd.Series): source column to derive annotations from.
+            func (Callable): the annotation function.
+            annotation (str): name of the annotation column in the dataframe.
+
+        Returns:
+            pd.DataFrame: annotated dataframe
+        """
         df[annotation] = df_series.apply(func)
 
         return df
@@ -37,7 +69,15 @@ class AnalysisBase(ABC):
 
 class AnalysisFactory:
     """
-    Factory class for creating executors
+    Factory class for creating executors.
+
+    Attributes:
+        None
+
+    Methods:
+        register(name: str, description: str): Class method to register
+                                               AnalysisFactory class to the internal registry.
+        create_executor(name: str): Factory command to create the executor.
     """
 
     # registry for available executors
@@ -49,7 +89,8 @@ class AnalysisFactory:
         Class method to register AnalysisFactory class to the internal
         registry.
 
-        :returns: The analysis class
+        Returns:
+            Callable: The analysis class.
         """
 
         def inner_wrapper(wrapped_class: AnalysisBase) -> Callable:
@@ -68,7 +109,8 @@ class AnalysisFactory:
         appropriate Analysis class from the registry and creates an
         instance of it, while passing in the parameters given in ``kwargs``.
 
-        :returns: An instance of the executor that is created.
+        Returns:
+            AnalysisBase: An instance of the executor that is created.
         """
 
         if name not in cls.registry:

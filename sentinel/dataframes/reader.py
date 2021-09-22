@@ -13,6 +13,12 @@ class Reader(ABC):
 
     @abstractmethod
     def read(self):
+        """
+        Read input dataframe (csv, protobuf etc.) to pandas dataframes.
+
+        Returns:
+            pd.DataFrame: pandas dataframe for input csv.
+        """
         raise NotImplementedError
 
 
@@ -29,18 +35,35 @@ class CSVReader(Reader):
         super().__init__(*args, **kwargs)
 
     @staticmethod
-    def _jsonify(item):
+    def _jsonify(item: str):
+        """
+        Convert stringified json to native dictionary.
+
+        Parameters:
+            item (str): stringified json.
+        """
         if isinstance(item, str):
             return json.loads(item)
         else:
             return []
 
-    def _post_read(self, df: pd.DataFrame):
-        df.alternatives = df.alternatives.apply(self._jsonify)
+    @staticmethod
+    def _post_read(df: pd.DataFrame):
+        """
+        Post csv read transformations.
+
+        Transformations done:
+        - Convert stringified alternatives to native format.
+        - ...
+
+        Parameters:
+            df (pd.DataFrame): call dataframe.
+        """
+        df.alternatives = df.alternatives.apply(CSVReader._jsonify)
 
         return df
 
-    def read(self):
+    def read(self) -> pd.DataFrame:
         df = pd.read_csv(self.path, encoding="utf-8")
         df = self._post_read(df)
 
