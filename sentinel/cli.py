@@ -1,5 +1,5 @@
 """
-sentinel
+sentinel: anomalous call monitoring framework.
 
 Usage:
   sentinel lookout --config-yml=<config-yml>
