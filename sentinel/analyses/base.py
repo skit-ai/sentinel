@@ -10,7 +10,7 @@ from sentinel.types import T
 
 
 class AnalysisBase(ABC):
-    def __init__(self, successor: Optional[T] = None):
+    def __init__(self, successor: Optional[T] = None, **kwargs):
         self.successor = successor
 
     def handle(self, df: pd.DataFrame):
