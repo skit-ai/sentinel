@@ -14,5 +14,7 @@ export:
 filters:
   low_confidence:
     annotation_key: "low_confidence"
+    kwargs:
+      confidence_threshold: 95
   no_alternatives:
     annotation_key: "no_alternatives"
