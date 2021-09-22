@@ -14,6 +14,12 @@ class CSVExporter(Exporter):
     def _get_df_for_category(df: pd.DataFrame, category):
         return df[~df[category].isnull()]
 
+    @staticmethod
+    def _serialize(df: pd.DataFrame):
+        df.alternatives = df.alternatives.apply(json.dumps)
+
+        return df
+
     def export_report(self, df: pd.DataFrame, categories: List):
         file_objects_map = {}
 
@@ -21,6 +27,8 @@ class CSVExporter(Exporter):
             buf = io.StringIO()
 
             filtered_df = self._get_df_for_category(df, category)
+            filtered_df = self._serialize(df)
+
             filtered_df.to_csv(buf, mode="w", index=False)
             buf.seek(0)
             file_objects_map[category] = buf
