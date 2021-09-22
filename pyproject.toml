@@ -11,6 +11,8 @@ boto3 = "^1.18.44"
 requests = "^2.26.0"
 PyYAML = "^5.4.1"
 docopt = "^0.6.2"
+tabulate = "^0.8.9"
+pytest-cov = "^2.12.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
