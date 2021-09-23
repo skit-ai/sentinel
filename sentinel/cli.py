@@ -8,13 +8,11 @@ Usage:
 Options:
   --config-yml=<config-yml>      Path to file with sentinel configs.
 """
-import io
 from docopt import docopt
 
 import yaml
 from tabulate import tabulate
 
-import sentinel.util as util
 from sentinel.analyses.base import AnalysisFactory
 from sentinel.exporters.slack import SlackExporter
 from sentinel.dataframes.reader import CSVReader
