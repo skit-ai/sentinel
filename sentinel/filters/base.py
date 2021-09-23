@@ -4,12 +4,12 @@ from abc import ABC, abstractmethod
 import pandas as pd
 
 
-class AnalysisBase(ABC):
+class FilterBase(ABC):
     """
     Base class for anomaly filters.
 
     Attributes:
-        successor (AnalysisBase): filter function instances implemented from
+        successor (FilterBase): filter function instances implemented from
                                   this base class.
 
     Methods:
@@ -18,7 +18,7 @@ class AnalysisBase(ABC):
         process(df: pd.DataFrame): Process serving sample (untagged call/turn dataframe).
     """
 
-    def __init__(self, successor: "AnalysisBase" = None, **kwargs):
+    def __init__(self, successor: "FilterBase" = None, **kwargs):
         self.successor = successor
 
     def handle(self, df: pd.DataFrame):
@@ -29,6 +29,7 @@ class AnalysisBase(ABC):
             df (pd.DataFrame): dataframe.
         """
         df = self.process(df)
+
         if self.successor:
             self.successor.handle(df)
         return df
@@ -67,7 +68,7 @@ class AnalysisBase(ABC):
         return df
 
 
-class AnalysisFactory:
+class FilterFactory:
     """
     Factory class for creating executors.
 
@@ -76,7 +77,7 @@ class AnalysisFactory:
 
     Methods:
         register(name: str, description: str): Class method to register
-                                               AnalysisFactory class to the internal registry.
+                                               FilterFactory class to the internal registry.
         create_executor(name: str): Factory command to create the executor.
     """
 
@@ -86,14 +87,14 @@ class AnalysisFactory:
     @classmethod
     def register(cls, name: str, description: str) -> Callable:
         """
-        Class method to register AnalysisFactory class to the internal
+        Class method to register FilterFactory class to the internal
         registry.
 
         Returns:
-            Callable: The analysis class.
+            Callable: The filter class.
         """
 
-        def inner_wrapper(wrapped_class: AnalysisBase) -> Callable:
+        def inner_wrapper(wrapped_class: FilterBase) -> Callable:
             if name in cls.registry:
                 print("Executor {name} already exists. Replacing it")
             cls.registry[name] = {"class": wrapped_class,
@@ -103,14 +104,14 @@ class AnalysisFactory:
         return inner_wrapper
 
     @classmethod
-    def create_executor(cls, name: str, **kwargs) -> AnalysisBase:
+    def create_executor(cls, name: str, **kwargs) -> FilterBase:
         """
         Factory command to create the executor.  This method gets the
-        appropriate Analysis class from the registry and creates an
+        appropriate Filter class from the registry and creates an
         instance of it, while passing in the parameters given in ``kwargs``.
 
         Returns:
-            AnalysisBase: An instance of the executor that is created.
+            FilterBase: An instance of the executor that is created.
         """
 
         if name not in cls.registry:

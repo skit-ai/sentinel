@@ -5,11 +5,11 @@ from typing import List, Dict, Union
 
 import pandas as pd
 
-from sentinel.analyses.base import AnalysisBase, AnalysisFactory
+from sentinel.filters.base import FilterBase, FilterFactory
 
 
-@AnalysisFactory.register(name="no_alternatives", description="Turns with no alternatives")
-class AlternativesFilter(AnalysisBase):
+@FilterFactory.register(name="no_alternatives", description="Turns with no alternatives")
+class AlternativesFilter(FilterBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

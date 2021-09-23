@@ -2,8 +2,9 @@ import os
 import pandas as pd
 
 from sentinel import __version__
-from sentinel.analyses.confidence import ConfidenceFilter
-from sentinel.analyses.alternatives import AlternativesFilter
+from sentinel.filters.confidence import ConfidenceFilter
+from sentinel.filters.alternatives import AlternativesFilter
+from sentinel.filters.prediction import PredictionConfidenceFilter
 from sentinel.dataframes.reader import CSVReader
 from sentinel.exporters.csv import CSVExporter
 

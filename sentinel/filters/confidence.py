@@ -5,11 +5,11 @@ from typing import List, Dict, Union
 
 import pandas as pd
 
-from sentinel.analyses.base import AnalysisBase, AnalysisFactory
+from sentinel.filters.base import FilterBase, FilterFactory
 
 
-@AnalysisFactory.register(name="low_confidence", description="Low confidence turns")
-class ConfidenceFilter(AnalysisBase):
+@FilterFactory.register(name="low_confidence", description="Low confidence turns")
+class ConfidenceFilter(FilterBase):
     def __init__(self, *args, **kwargs):
         self.confidence_threshold = kwargs.get("confidence_threshold", 95)
 

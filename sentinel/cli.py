@@ -13,7 +13,7 @@ from docopt import docopt
 import yaml
 from tabulate import tabulate
 
-from sentinel.analyses.base import AnalysisFactory
+from sentinel.filters.base import FilterFactory
 from sentinel.exporters.slack import SlackExporter
 from sentinel.dataframes.reader import CSVReader
 from sentinel import __version__
@@ -41,13 +41,13 @@ def main():
         # TODO: make instantiation and chaining more readable
 
         # Instantiate first filter
-        filter = AnalysisFactory.create_executor(
+        filter = FilterFactory.create_executor(
             filters[0], **config["filters"][filters[0]].get("kwargs", {}))
         current_filter = filter
 
         # Chain other filters to each other
         for category in filters[1:]:
-            current_filter.successor = AnalysisFactory.create_executor(
+            current_filter.successor = FilterFactory.create_executor(
                 category, **config["filters"][category].get("kwargs", {}))
             current_filter = current_filter.successor
 
@@ -62,7 +62,7 @@ def main():
     elif args["list"]:
         headers = ["filters", "description"]
         table_data = []
-        for name, factory_item in AnalysisFactory.registry.items():
+        for name, factory_item in FilterFactory.registry.items():
             table_data.append((name, factory_item.get('description')))
 
         print("Available analysis functions:\n")

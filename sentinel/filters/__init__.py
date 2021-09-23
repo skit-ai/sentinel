@@ -3,7 +3,7 @@ from inspect import isclass
 from pkgutil import iter_modules
 from importlib import import_module
 
-from sentinel.analyses.base import AnalysisBase
+from sentinel.filters.base import FilterBase
 
 
 package_dir = os.path.dirname(os.path.realpath(__file__))
@@ -15,5 +15,5 @@ for _, module_name, _ in iter_modules([package_dir]):
     for attribute_name in dir(module):
         attribute = getattr(module, attribute_name)
 
-        if isclass(attribute) and issubclass(attribute, AnalysisBase):
+        if isclass(attribute) and issubclass(attribute, FilterBase):
             globals()[attribute_name] = attribute
