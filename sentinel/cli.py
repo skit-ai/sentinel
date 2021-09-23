@@ -65,5 +65,5 @@ def main():
         for name, factory_item in FilterFactory.registry.items():
             table_data.append((name, factory_item.get('description')))
 
-        print("Available analysis functions:\n")
+        print("Available filter functions:\n")
         print(tabulate(table_data, headers, tablefmt="pretty", colalign=("left",)))
