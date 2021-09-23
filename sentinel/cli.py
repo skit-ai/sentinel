@@ -38,11 +38,18 @@ def main():
             return None
 
         # Collect filters from factory to run
+        # TODO: make instantiation and chaining more readable
+
+        # Instantiate first filter
         filter = AnalysisFactory.create_executor(
             filters[0], **config["filters"][filters[0]].get("kwargs", {}))
+        current_filter = filter
+
+        # Chain other filters to each other
         for category in filters[1:]:
-            filter.successor = AnalysisFactory.create_executor(
+            current_filter.successor = AnalysisFactory.create_executor(
                 category, **config["filters"][category].get("kwargs", {}))
+            current_filter = current_filter.successor
 
         # Start execution of analysis functions
         df = filter.handle(df)
