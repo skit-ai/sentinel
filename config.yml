@@ -12,6 +12,10 @@ export:
       - user2@example.com
 
 filters:
+  prediction_low_confidence:
+    annotation_key: "prediction_low_confidence"
+    kwargs:
+      confidence_threshold: 0.95
   low_confidence:
     annotation_key: "low_confidence"
     kwargs:
