@@ -70,3 +70,21 @@ def test_no_alternatives():
     df_processed = csv_reader.read()
 
     assert df_processed.no_alternatives.equals(df_expected.no_alternatives)
+
+
+def test_low_confidence_prediction_filter():
+    csv_reader = CSVReader(f"{package_dir}/resources/records.csv")
+    df = csv_reader.read()
+
+    csv_reader = CSVReader(f"{package_dir}/resources/prediction_low_confidence.csv")
+    df_expected = csv_reader.read()
+
+    confidence_filter = PredictionConfidenceFilter(**{"confidence_threshold": 0.95})
+    df_processed = confidence_filter.process(df)
+
+    csv_exporter = CSVExporter()
+    fp_map = csv_exporter.export_report(df_processed, ["prediction_low_confidence"])
+    csv_reader = CSVReader(fp_map["prediction_low_confidence"])
+    df_processed = csv_reader.read()
+
+    assert df_processed.prediction_low_confidence.equals(df_expected.prediction_low_confidence)
