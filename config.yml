@@ -13,12 +13,15 @@ export:
 
 filters:
   prediction_low_confidence:
+    limit: 20
     annotation_key: "prediction_low_confidence"
     kwargs:
       confidence_threshold: 0.95
   low_confidence:
+    limit: 2
     annotation_key: "low_confidence"
     kwargs:
       confidence_threshold: 95
   no_alternatives:
+    limit: 30
     annotation_key: "no_alternatives"

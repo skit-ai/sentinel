@@ -56,7 +56,7 @@ def main():
 
         export_medium = config.get("export", {})
         if export_medium.get("slack"):
-            slack_exporter = SlackExporter()
+            slack_exporter = SlackExporter(config)
             slack_exporter.export_report(df, filters)
 
     elif args["list"]:
