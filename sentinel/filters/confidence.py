@@ -8,7 +8,7 @@ import pandas as pd
 from sentinel.filters.base import FilterBase, FilterFactory
 
 
-@FilterFactory.register(name="low_confidence", description="Low confidence turns")
+@FilterFactory.register(name="low_asr_confidence", description="Low ASR confidence turns")
 class ConfidenceFilter(FilterBase):
     def __init__(self, *args, **kwargs):
         self.confidence_threshold = kwargs.get("confidence_threshold", 95)
@@ -20,7 +20,7 @@ class ConfidenceFilter(FilterBase):
 
     def process(self, df: pd.DataFrame) -> pd.DataFrame:
         df = self.annotate(df, df.alternatives,
-                           self._get_low_confidence, "low_confidence")
+                           self._get_low_confidence, "low_asr_confidence")
 
         return df
 
