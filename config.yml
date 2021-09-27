@@ -18,10 +18,15 @@ filters:
     kwargs:
       confidence_threshold: 0.95
   low_confidence:
-    limit: 2
+    limit: 30
     annotation_key: "low_confidence"
     kwargs:
-      confidence_threshold: 95
+      confidence_threshold: 0.95
   no_alternatives:
     limit: 30
     annotation_key: "no_alternatives"
+  call_end_state:
+    limit: 10
+    annotation_key: "call_end_state"
+    kwargs:
+      end_state: ["FOLLOW_UP"]
