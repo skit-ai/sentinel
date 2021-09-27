@@ -38,7 +38,7 @@ class ConfidenceFilter(FilterBase):
             return None
 
         item = item[0]
-        item = sorted(item, key=lambda x: x["confidence"])
+        item = sorted(item, key=lambda x: x["confidence"], reverse=True)
         if item[0]["confidence"] < self.confidence_threshold:
             return {"score": item[0]["confidence"]}
         return None
