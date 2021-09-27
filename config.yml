@@ -13,20 +13,20 @@ export:
 
 filters:
   prediction_low_confidence:
-    limit: 20
+    limit: 10
     annotation_key: "prediction_low_confidence"
     kwargs:
-      confidence_threshold: 0.95
-  low_confidence:
-    limit: 30
-    annotation_key: "low_confidence"
+      confidence_threshold: 0.50
+  low_asr_confidence:
+    limit: 10
+    annotation_key: "low_asr_confidence"
     kwargs:
-      confidence_threshold: 0.95
+      confidence_threshold: 0.50
   no_alternatives:
-    limit: 30
+    limit: 10
     annotation_key: "no_alternatives"
   call_end_state:
     limit: 10
     annotation_key: "call_end_state"
     kwargs:
-      end_state: ["FOLLOW_UP"]
+      end_state: ["REPROMPT_INTENT"]
