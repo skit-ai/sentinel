@@ -1,9 +1,12 @@
+import io
 import logging
+
 import boto3
+import pandas as pd
 from botocore.exceptions import ClientError
 
 
-def upload_file(fp, bucket: str, object_name: str) -> bool:
+def upload_df_to_s3(df: pd.DataFrame, bucket: str, object_name: str) -> bool:
     """
     Upload a file to an S3 bucket.
 
@@ -19,9 +22,12 @@ def upload_file(fp, bucket: str, object_name: str) -> bool:
     # Upload the file
     s3_client = boto3.client('s3')
     try:
+        fp = io.StringIO()
+        df.to_csv(fp, mode="w", index=False)
+
         s3_client.put_object(
             Bucket=bucket,
-            Body=fp.read(),
+            Body=fp.getvalue(),
             Key=object_name,
         )
     except ClientError as e:
