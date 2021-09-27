@@ -40,6 +40,7 @@ class CSVExporter(Exporter):
             pd.DataFrame: updated dataframe.
         """
         df.alternatives = df.alternatives.apply(json.dumps)
+        df.prediction = df.prediction.apply(json.dumps)
 
         return df
 
