@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from abc import ABC, abstractmethod
 
 import pandas as pd
@@ -21,7 +21,7 @@ class Exporter(ABC):
         self.successor = successor
 
     @abstractmethod
-    def export_report(self, df: pd.DataFrame):
+    def export_report(self, df: pd.DataFrame, categories: List[str]):
         """
         Export report for different filters applied.
 
