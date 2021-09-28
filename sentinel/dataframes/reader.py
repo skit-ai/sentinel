@@ -3,6 +3,7 @@ Input dataframe readers. Currently supports Protobuf and CSVs
 """
 import json
 from abc import ABC, abstractmethod
+from typing import Dict, Any
 
 import pandas as pd
 
@@ -35,7 +36,7 @@ class CSVReader(Reader):
         super().__init__(*args, **kwargs)
 
     @staticmethod
-    def _jsonify(item: str):
+    def _jsonify(item: str) -> Dict[str, Any]:
         """
         Convert stringified json to native dictionary.
 
@@ -48,7 +49,7 @@ class CSVReader(Reader):
             return []
 
     @staticmethod
-    def _post_read(df: pd.DataFrame):
+    def _post_read(df: pd.DataFrame) -> pd.DataFrame:
         """
         Post csv read transformations.
 
