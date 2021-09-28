@@ -5,6 +5,7 @@ from sentinel import __version__
 from sentinel.filters.confidence import ConfidenceFilter
 from sentinel.filters.alternatives import AlternativesFilter
 from sentinel.filters.prediction import PredictionConfidenceFilter
+from sentinel.filters.state import EndStateFilter
 from sentinel.dataframes.reader import CSVReader
 from sentinel.exporters.csv import CSVExporter
 
@@ -83,8 +84,27 @@ def test_low_confidence_prediction_filter():
     df_processed = confidence_filter.process(df)
 
     csv_exporter = CSVExporter()
-    fp_map = csv_exporter.export_report(df_processed, ["prediction_low_confidence"])
-    csv_reader = CSVReader(fp_map["prediction_low_confidence"])
-    df_processed = csv_reader.read()
+    df_processed = csv_exporter._get_df_for_category(
+        df_processed, "prediction_low_confidence")
 
-    assert df_processed.prediction_low_confidence.equals(df_expected.prediction_low_confidence)
+    pd.testing.assert_series_equal(
+        df_processed.call_uuid, df_expected.call_uuid, check_index=False)
+
+
+def test_end_state_filter():
+    csv_reader = CSVReader(f"{package_dir}/resources/records.csv")
+    df = csv_reader.read()
+
+    csv_reader = CSVReader(
+        f"{package_dir}/resources/call_end_state.csv")
+    df_expected = csv_reader.read()
+
+    end_state_filter = EndStateFilter(**{"end_state": ["FOLLOW_UP"]})
+    df_processed = end_state_filter.process(df)
+
+    csv_exporter = CSVExporter()
+    df_processed = csv_exporter._get_df_for_category(df_processed,
+                                                     "call_end_state")
+
+    pd.testing.assert_series_equal(
+        df_processed.call_uuid, df_expected.call_uuid, check_index=False)
