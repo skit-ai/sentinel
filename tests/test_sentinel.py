@@ -28,30 +28,27 @@ def test_csv_exporter():
     df = csv_reader.read()
 
     csv_exporter = CSVExporter()
-    fp_map = csv_exporter.export_report(df, ["alternatives"])
-
-    csv_reader = CSVReader(fp_map["alternatives"])
-    df_processed = csv_reader.read()
+    df_processed = csv_exporter._get_df_for_category(df, ["alternatives"])
 
     assert all(df.columns == df_processed.columns)
 
 
-def test_low_confidence_filter():
+def test_low_asr_confidence_filter():
     csv_reader = CSVReader(f"{package_dir}/resources/records.csv")
     df = csv_reader.read()
 
-    csv_reader = CSVReader(f"{package_dir}/resources/low_confidence.csv")
+    csv_reader = CSVReader(f"{package_dir}/resources/low_asr_confidence.csv")
     df_expected = csv_reader.read()
 
-    confidence_filter = ConfidenceFilter(**{"confidence_threshold": 95})
+    confidence_filter = ConfidenceFilter(**{"confidence_threshold": 0.95})
     df_processed = confidence_filter.process(df)
 
     csv_exporter = CSVExporter()
-    fp_map = csv_exporter.export_report(df_processed, ["low_confidence"])
-    csv_reader = CSVReader(fp_map["low_confidence"])
-    df_processed = csv_reader.read()
+    df_processed = csv_exporter._get_df_for_category(
+        df_processed, "low_asr_confidence")
 
-    assert df_processed.low_confidence.equals(df_expected.low_confidence)
+    pd.testing.assert_series_equal(
+        df_processed.call_uuid, df_expected.call_uuid, check_index=False)
 
 
 def test_no_alternatives():
@@ -65,22 +62,23 @@ def test_no_alternatives():
     df_processed = alternatives_filter.process(df)
 
     csv_exporter = CSVExporter()
-    fp_map = csv_exporter.export_report(df_processed, ["no_alternatives"])
+    df_processed = csv_exporter._get_df_for_category(
+        df_processed, "no_alternatives")
 
-    csv_reader = CSVReader(fp_map["no_alternatives"])
-    df_processed = csv_reader.read()
-
-    assert df_processed.no_alternatives.equals(df_expected.no_alternatives)
+    pd.testing.assert_series_equal(
+        df_processed.call_uuid, df_expected.call_uuid, check_index=False)
 
 
 def test_low_confidence_prediction_filter():
     csv_reader = CSVReader(f"{package_dir}/resources/records.csv")
     df = csv_reader.read()
 
-    csv_reader = CSVReader(f"{package_dir}/resources/prediction_low_confidence.csv")
+    csv_reader = CSVReader(
+        f"{package_dir}/resources/prediction_low_confidence.csv")
     df_expected = csv_reader.read()
 
-    confidence_filter = PredictionConfidenceFilter(**{"confidence_threshold": 0.95})
+    confidence_filter = PredictionConfidenceFilter(
+        **{"confidence_threshold": 0.95})
     df_processed = confidence_filter.process(df)
 
     csv_exporter = CSVExporter()
