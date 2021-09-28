@@ -111,7 +111,7 @@ class SlackExporter(CSVExporter):
 
         return message_blocks
 
-    def export_report(self, df: pd.DataFrame, categories: List):
+    def export_report(self, df_list: List[pd.DataFrame], categories: List):
         s3_uuid = uuid.uuid4()
 
         slack_webhook_url = os.environ.get("SENTINEL_SLACK_WEBHOOK")
@@ -123,8 +123,8 @@ class SlackExporter(CSVExporter):
             message_blocks, f"*We have found anomalous calls under following categories: {', '.join(categories)}*")
 
         # For each filter function generate slack message blocks
-        for category in categories:
-            filtered_df = self._get_df_for_category(df, category)
+        for idx, category in enumerate(categories):
+            filtered_df = self._get_df_for_category(df_list[idx], category)
             filtered_df = self._serialize(filtered_df)
 
             message_blocks.extend(self._message_builder(filtered_df, category))

@@ -52,12 +52,12 @@ def main():
             current_filter = current_filter.successor
 
         # Start execution of analysis functions
-        df = filter.handle(df)
+        df_list = filter.handle(df, [])
 
         export_medium = config.get("export", {})
         if export_medium.get("slack"):
             slack_exporter = SlackExporter(config)
-            slack_exporter.export_report(df, filters)
+            slack_exporter.export_report(df_list, filters)
 
     elif args["list"]:
         headers = ["filters", "description"]

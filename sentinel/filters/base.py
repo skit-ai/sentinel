@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, List
 from abc import ABC, abstractmethod
 
 import pandas as pd
@@ -21,18 +21,19 @@ class FilterBase(ABC):
     def __init__(self, successor: "FilterBase" = None, **kwargs):
         self.successor = successor
 
-    def handle(self, df: pd.DataFrame):
+    def handle(self, df: pd.DataFrame, df_list: List[pd.DataFrame]):
         """
         Calls filter functions chained as its successor.
 
         Parameters:
             df (pd.DataFrame): dataframe.
+            df_list (list): list of dataframes.
         """
-        df = self.process(df)
+        df_list.append(self.process(df))
 
         if self.successor:
-            self.successor.handle(df)
-        return df
+            self.successor.handle(df, df_list)
+        return df_list
 
     @abstractmethod
     def preprocess(self, df: pd.DataFrame):
