@@ -61,7 +61,7 @@ filters:
 All the filters to use for sentinel runs are specified under this.
 
 - `<filter-name>`: Name of the filter you used while registering. For example:
-  see how [`ASRConfidenceFilter`](./) is registered.
+  see how [`ASRConfidenceFilter`][asr-confidence] is registered.
   - `limit`: Number of items (calls/turns) you want to see in the final report
     satisfying this filter's constraints.
   - `annotation_key`: name of the column name to be added in the dataframe.
@@ -70,4 +70,7 @@ All the filters to use for sentinel runs are specified under this.
   - `kwargs`: Any keyword arguments you would want to pass to the filters.
     - `<kwarg-name>`: Value which the filters can use. Make sure that the
       filter functions (available or custom defined) make use of these keyword
-      arguments. Check a sample filter which makes use of kwargs [here](./)
+      arguments. Check a sample filter which makes use of kwargs [here][asr-confidence].
+
+
+[asr-confidence]: https://github.com/skit-ai/sentinel/blob/master/sentinel/filters/confidence.p

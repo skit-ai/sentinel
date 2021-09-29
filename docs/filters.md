@@ -27,10 +27,10 @@ Consider a dataframe below:
 
 ```
 call_uuid,conversation_uuid,alternatives,audio_url,reftime,prediction,state,call_duration,state_transitions
-eed0f31c-c5e1-4f5b-aaaa-836c2e2b99f5,eed0f31c-c5e1-4f5b-aaaa-836c2e2b99f5,"[[{""confidence"": 0.9299549, ""transcript"": ""Hindi""}, {""confidence"": 0.04444444, ""transcript"": ""hinadi""}, {""confidence"": 0.48719966, ""transcript"": ""in Hindi""}]]",***REMOVED***%2F2021-09-27%2Feed0f31c-c5e1-4f5b-aaaa-836c2e2b99f5%2Fc0f5b3ef-da72-4488-8191-b0412685fd3c.flac,2021-09-27 03:37:14.806623 +0000 UTC,"{""name"": ""inform_hindi"", ""score"": 0.9949743324486925, ""slot"": []}",COF,,UPCOMING_FLIGHT_DETAILS_ASYNC -> GET_LANGUAGE_PREFERENCE -> COF -> COF -> SET_LANGUAGE_PREFERENCE -> COF_QUERY -> COF_QUERY -> COF_QUERY -> COF_QUERY -> CONFIRMATION_CANCELLATION_POLICY -> CONFIRMATION_CANCELLATION_POLICY -> CONFIRMATION_CANCELLATION_POLICY -> ACTION_FETCH_UPCOMING_FLIGHT_DETAILS -> BOOKING_DONE -> BOOKING_DONE -> COF_ALPHANUMERIC -> COF_ALPHANUMERIC -> COLLECT_INPUT -> COLLECT_INPUT -> COLLECT_INPUT -> COLLECT_INPUT -> COLLECT_INPUT -> ACTION_GROUP_4 -> GROUP_4_2 -> GROUP_4_2 -> ACTION_CONFIRM_GROUP_4 -> ACTION_GROUP_4 -> GROUP_4_2 -> GROUP_4_2 -> ACTION_CONFIRM_GROUP_4 -> FINAL_CONFIRM -> FINAL_CONFIRM -> FINAL_CONFIRM -> FINAL_CONFIRM -> TRANSFER_AGENT -> NA
+***REMOVED***,***REMOVED***,"[[{""confidence"": 0.9299549, ""transcript"": ""Hindi""}, {""confidence"": 0.04444444, ""transcript"": ""hinadi""}, {""confidence"": 0.48719966, ""transcript"": ""in Hindi""}]]",***REMOVED***%2F2021-09-27%2F***REMOVED***%2Fc0f5b3ef-da72-4488-8191-b0412685fd3c.flac,2021-09-27 03:37:14.806623 +0000 UTC,"{""name"": ""inform_hindi"", ""score"": 0.9949743324486925, ""slot"": []}",COF,,UPCOMING_FLIGHT_DETAILS_ASYNC -> GET_LANGUAGE_PREFERENCE -> COF -> COF -> SET_LANGUAGE_PREFERENCE -> COF_QUERY -> COF_QUERY -> COF_QUERY -> COF_QUERY -> CONFIRMATION_CANCELLATION_POLICY -> CONFIRMATION_CANCELLATION_POLICY -> CONFIRMATION_CANCELLATION_POLICY -> ACTION_FETCH_UPCOMING_FLIGHT_DETAILS -> BOOKING_DONE -> BOOKING_DONE -> COF_ALPHANUMERIC -> COF_ALPHANUMERIC -> COLLECT_INPUT -> COLLECT_INPUT -> COLLECT_INPUT -> COLLECT_INPUT -> COLLECT_INPUT -> ACTION_GROUP_4 -> GROUP_4_2 -> GROUP_4_2 -> ACTION_CONFIRM_GROUP_4 -> ACTION_GROUP_4 -> GROUP_4_2 -> GROUP_4_2 -> ACTION_CONFIRM_GROUP_4 -> FINAL_CONFIRM -> FINAL_CONFIRM -> FINAL_CONFIRM -> FINAL_CONFIRM -> TRANSFER_AGENT -> NA
 ```
 
-If you apply an [`ASRConfidenceFilter`](./) filter on this dataframe with a
+If you apply an [`ASRConfidenceFilter`][asr-confidence] filter on this dataframe with a
 threshold of `0.95`, this will be marked as an anomalous call because of the
 low confidence in of the alternatives.
 
@@ -38,8 +38,8 @@ low confidence in of the alternatives.
 
 ### Writing a custom filter
 
-Implement the [`FilterBase`](./) class and register it via
-[`@FilterFactory.register`](./) decorator to add it to supported filter factory.
+Implement the [`FilterBase`][filter-base] class and register it via
+[`@FilterFactory.register`][register] decorator to add it to supported filter factory.
 
 For example, consider a filter to flag out calls with certain end state.
 
@@ -74,7 +74,7 @@ class EndStateFilter(FilterBase):
 Logic on how filtering is being performed for this particular example might be
 out of the scope of this doc but the basic steps taken are:
 
-1. Create a new filter class inheriting the [`FilterBase`](./) ABC and register it
+1. Create a new filter class inheriting the [`FilterBase`][filter-base] ABC and register it
    with the [`FilterFactory`](./)
 
 ```python
@@ -88,12 +88,12 @@ class EndStateFilter(FilterBase):
 ```
 Here,
 
-- `name` is the name of this filter which will be used to refer this filter in [`config.yml`](./).
+- `name` is the name of this filter which will be used to refer this filter in [`config.yml`][config-spec].
 - `description` is the description of this filter which is mostly used while
   reporting calls over Slack or email.
 
 Any keyword arguments described in the `config.yml` (see how to provide keyword
-arguments in `config.yml` [here](./)), must be initialzed and in `__init__()`
+arguments in `config.yml` [here][config-spec]), must be initialzed and in `__init__()`
 like above
 
 2. For serving dataframes, implement `process()` method to filter out a smaller
@@ -122,5 +122,11 @@ class EndStateFilter(FilterBase):
 
 ### Using your newly created filters
 
-Check the `config.yml` doc [here](./) to see how to add your filter to be used
+Check the `config.yml` doc [here][config-spec] to see how to add your filter to be used
 by sentinel.
+
+
+[filter-base]: https://github.com/skit-ai/sentinel/blob/master/sentinel/filters/base.py#L7
+[asr-confidence]: https://github.com/skit-ai/sentinel/blob/master/sentinel/filters/confidence.p
+[register]: https://github.com/skit-ai/sentinel/blob/master/sentinel/filters/base.py#L89
+[config-spec]: ./config-spec.html
