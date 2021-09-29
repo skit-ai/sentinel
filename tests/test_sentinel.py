@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 from sentinel import __version__
-from sentinel.filters.confidence import ConfidenceFilter
+from sentinel.filters.confidence import ASRConfidenceFilter
 from sentinel.filters.alternatives import AlternativesFilter
 from sentinel.filters.prediction import PredictionConfidenceFilter
 from sentinel.filters.state import EndStateFilter
@@ -40,7 +40,7 @@ def test_low_asr_confidence_filter():
     csv_reader = CSVReader(f"{package_dir}/resources/low_asr_confidence.csv")
     df_expected = csv_reader.read()
 
-    confidence_filter = ConfidenceFilter(**{"confidence_threshold": 0.95})
+    confidence_filter = ASRConfidenceFilter(**{"confidence_threshold": 0.95})
     df_processed = confidence_filter.process(df)
 
     csv_exporter = CSVExporter()

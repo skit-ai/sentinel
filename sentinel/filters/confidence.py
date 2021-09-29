@@ -9,7 +9,7 @@ from sentinel.filters.base import FilterBase, FilterFactory
 
 
 @FilterFactory.register(name="low_asr_confidence", description="Low ASR confidence turns")
-class ConfidenceFilter(FilterBase):
+class ASRConfidenceFilter(FilterBase):
     def __init__(self, *args, **kwargs):
         self.confidence_threshold = kwargs.get("confidence_threshold", 95)
 
