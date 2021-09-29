@@ -22,7 +22,7 @@ from sentinel import __version__
 def main():
     args = docopt(__doc__, version=__version__)
 
-    if args["lookout"]:
+    if args["run"]:
         config_file = args["--config-yml"]
         config = yaml.load(open(config_file, "r"), Loader=yaml.FullLoader)
 
