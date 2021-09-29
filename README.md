@@ -1,6 +1,6 @@
 # sentinel
 
-![](https://img.shields.io/github/v/tag/skit-ai/sentinel.svg?style=flat-square)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/skit-ai/sentinel?style=flat-square)
 
 `sentinel` is Skit's call monitoring and filtering framework.
 
