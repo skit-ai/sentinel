@@ -1,11 +1,8 @@
 # sentinel
 
-Skit's anomalous call monitoring framework.
+![](https://img.shields.io/github/v/tag/skit-ai/sentinel.svg?style=flat-square)
 
-## Usage
+Skit's call monitoring and filtering framework.
 
-```
-Usage:
-  sentinel lookout --config-yml=<config-yml>
-  sentinel list
-```
+See documentation [here](https://skit-ai.github.io/sentinel).
+
