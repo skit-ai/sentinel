@@ -40,7 +40,7 @@ class FilterBase(ABC):
         pass
 
     @abstractmethod
-    def process(self, df: pd.DataFrame):
+    def process(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Process serving sample (untagged call/turn dataframe).
 
