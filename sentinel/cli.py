@@ -2,7 +2,7 @@
 sentinel: anomalous call monitoring framework.
 
 Usage:
-  sentinel lookout --config-yml=<config-yml>
+  sentinel run --config-yml=<config-yml>
   sentinel list
 
 Options:
