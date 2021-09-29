@@ -5,7 +5,7 @@ data_url: s3://bucket/path/to/dataframe.csv
 
 export:
   slack:
-    channel_id: ""
+    webhook_url: ""
   email:
     ids:
       - user@example.com
