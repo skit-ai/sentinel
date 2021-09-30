@@ -59,7 +59,7 @@ class SlackExporter(CSVExporter):
         call_text_list = []
         for call_uuid in call_uuids:
             call_reference = self._get_call_reference(call_uuid)
-            call_text_list.append(f"• {call_reference}")
+            call_text_list.append(f"• <{call_reference}|{call_uuid}>")
 
         for idx in range(0, len(call_text_list), chunk_size):
             yield call_text_list[idx: idx + chunk_size]
@@ -131,7 +131,7 @@ class SlackExporter(CSVExporter):
 
             util.upload_df_to_s3(filtered_df, s3_bucket,
                                  f"sentinel/{s3_uuid}/{category}.csv")
-            dataframe_message += f"\ns3://{s3_bucket}/sentinel/{s3_uuid}/{category}.csv"
+            dataframe_message += f"\n<s3://{s3_bucket}/sentinel/{s3_uuid}/{category}.csv|{category}.csv>"
 
         self._write_block(
             message_blocks, f"Exported dataframes at: {dataframe_message}")
