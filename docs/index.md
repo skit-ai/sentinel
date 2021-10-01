@@ -52,3 +52,16 @@ Available filter functions:
 | call_end_state            | Calls with a particular end state |
 +---------------------------+-----------------------------------+
 ```
+
+## Reporting
+
+Currently, sentinel supports exporting results on Slack.
+
+### Slack
+
+Below is a screenshot of exports on Slack.
+![](assets/images/report-sc.png)
+
+### Email
+
+...
