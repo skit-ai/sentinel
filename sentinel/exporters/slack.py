@@ -103,7 +103,7 @@ class SlackExporter(CSVExporter):
 
         category_description = registry.get(category, {}).get('description')
         self._write_block(
-            message_blocks, f"*{category_description}. Kwargs: {category_data.get('kwargs')}*")
+            message_blocks, f":pencil: *{category_description}. Kwargs: {category_data.get('kwargs')}*")
 
         call_text_list = self._chunk_call_list(call_uuids, 20)
         for call_text in call_text_list:
@@ -134,7 +134,7 @@ class SlackExporter(CSVExporter):
             dataframe_message += f"\n<s3://{s3_bucket}/sentinel/{s3_uuid}/{category}.csv|{category}.csv>"
 
         self._write_block(
-            message_blocks, f"Exported dataframes at: {dataframe_message}")
+            message_blocks, f"* :file_cabinet: Exported dataframes at:* {dataframe_message}")
 
         # For each block chunk send a new message
         blocks_chunk = self._chunk_blocks(message_blocks, 50)
