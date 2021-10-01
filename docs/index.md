@@ -9,7 +9,11 @@ nav_order: 1
 
 # Sentinel
 
-Sentinel is an anomalous call monitoring and filtering system which picks calls
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/skit-ai/sentinel?style=flat-square)
+[![CI](https://github.com/skit-ai/sentinel/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/skit-ai/sentinel/actions/workflows/test.yml)
+[![docs](https://github.com/skit-ai/sentinel/actions/workflows/docs.yml/badge.svg?branch=master)](https://github.com/skit-ai/sentinel/actions/workflows/docs.yml)
+
+[Sentinel][sentinel] is an anomalous call monitoring and filtering system which picks calls
 that are weird in some way or the other and push them to a daily report.
 
 It works on calls/turn data as defined in [dataframes](https://github.com/skit-ai/dataframes) that has standard datatype
@@ -65,3 +69,5 @@ Below is a screenshot of exports on Slack.
 ### Email
 
 ...
+
+[sentinel]: https://github.com/skit-ai/sentinel
