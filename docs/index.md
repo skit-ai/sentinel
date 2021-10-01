@@ -18,7 +18,7 @@ definitions.
 ## Installation
 
 ```
-pip install https://github.com/skit-ai/sentinel/releases/download/0.1.0/sentinel-0.1.0-py3-none-any.whl
+pip install https://github.com/skit-ai/sentinel/releases/download/0.1.1/sentinel-0.1.1-py3-none-any.whl
 ```
 
 ## Usage
