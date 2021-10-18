@@ -15,7 +15,7 @@ class SlackExporter(CSVExporter):
         self.config = config
         super().__init__(*args, **kwargs)
 
-    def _get_call_reference(self, call_uuid: str) -> str:
+    def _get_call_reference(self, call_uuid: str, turn_uuid: str) -> str:
         """
         Get call reference url. Skit internal console url or otherwise.
 
@@ -25,7 +25,7 @@ class SlackExporter(CSVExporter):
             str: URL for a call with `call_uuid`
         """
         console_host = os.environ.get("SENTINEL_CONSOLE_HOST")
-        return f"{console_host}{self.config.get('client_id', 1)}/call-report/#/call?uuid={call_uuid}"
+        return f"{console_host}{self.config.get('client_id', 1)}/call-report/#/call?uuid={call_uuid}&turnuuid={turn_uuid}"
 
     def _write_block(self, message_blocks: List, text: str) -> List:
         """
@@ -46,20 +46,22 @@ class SlackExporter(CSVExporter):
             }
         })
 
-    def _chunk_call_list(self, call_uuids: List[str], chunk_size: int) -> Iterator:
+    def _chunk_call_list(self, df: pd.DataFrame, chunk_size: int) -> Iterator:
         """
         Chunk text message to so that it doesn't exceed Slack's max limit.
         Slack allows max 3001 characters.
 
         Parameters:
-            call_uuids (list): List of call UUIDs.
+            df (pd.DataFrame): Dataframe.
             chunk_size (int): Size of uuid list to chunk into.
         """
         # Create list of call urls
         call_text_list = []
-        for call_uuid in call_uuids:
-            call_reference = self._get_call_reference(call_uuid)
-            call_text_list.append(f"• <{call_reference}|{call_uuid}>")
+        for row in df.iterrows():
+            row = row[1]
+            call_reference = self._get_call_reference(
+                    row.call_uuid, row.conversation_uuid)
+            call_text_list.append(f"• <{call_reference}|{row.call_uuid}>")
 
         for idx in range(0, len(call_text_list), chunk_size):
             yield call_text_list[idx: idx + chunk_size]
@@ -93,7 +95,7 @@ class SlackExporter(CSVExporter):
         limit = category_data.get("limit", 50)
 
         # Limit the number of calls to display
-        call_uuids = df.call_uuid.unique()[:limit]
+        df = df.drop_duplicates("conversation_uuid")[:limit]
 
         # Get all available filter functions from registry
         registry = FilterFactory.registry
@@ -105,7 +107,7 @@ class SlackExporter(CSVExporter):
         self._write_block(
             message_blocks, f":pencil: *{category_description}. Kwargs: {category_data.get('kwargs')}*")
 
-        call_text_list = self._chunk_call_list(call_uuids, 20)
+        call_text_list = self._chunk_call_list(df, 10)
         for call_text in call_text_list:
             self._write_block(message_blocks, "\n".join(call_text))
 
