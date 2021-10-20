@@ -16,7 +16,7 @@ data_url: s3://bucket/path/to/dataframe.csv
 
 export:
   slack:
-    webhook_url: ""
+    channel_name: "app-testing"
   email:
     ids:
       - user@example.com
@@ -52,7 +52,7 @@ filters:
 - `data_url`: S3 path of the dataframe.
 - `export`: Report exporting methods.
   - `slack`:
-    - `webhook_url`: Slack webhook for the channel to post report in.
+    - `channel_name`: Slack channel name to post report in.
   - `email`: This feature is not yet supported.
     - `ids`: List of email ids to send reports to.
 
