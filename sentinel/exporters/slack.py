@@ -1,9 +1,10 @@
 import os
 import uuid
+from datetime import datetime
 from typing import List, Iterator
 
 import pandas as pd
-import requests
+from slack_sdk import WebClient
 
 import sentinel.util as util
 from sentinel.exporters.csv import CSVExporter
@@ -13,6 +14,8 @@ from sentinel.filters.base import FilterFactory
 class SlackExporter(CSVExporter):
     def __init__(self, config, *args, **kwargs):
         self.config = config
+        self.slack_client = WebClient(
+            token=os.environ.get("SENTINEL_BOT_USER_TOKEN"))
         super().__init__(*args, **kwargs)
 
     def _get_call_reference(self, call_uuid: str, turn_uuid: str) -> str:
@@ -116,7 +119,6 @@ class SlackExporter(CSVExporter):
     def export_report(self, df_list: List[pd.DataFrame], categories: List):
         s3_uuid = uuid.uuid4()
 
-        slack_webhook_url = os.environ.get("SENTINEL_SLACK_WEBHOOK")
         s3_bucket = os.environ.get("SENTINEL_S3_BUCKET")
 
         dataframe_message = ""
@@ -140,8 +142,25 @@ class SlackExporter(CSVExporter):
 
         # For each block chunk send a new message
         blocks_chunk = self._chunk_blocks(message_blocks, 50)
+        channel_name = self.config.get("export", {}).get(
+            "slack", {}).get("channel_name")
+
+        message_response = self.slack_client.chat_postMessage(
+            channel=channel_name,
+            text=f"Sentinel thread: {datetime.today().date()}",
+            blocks=[{
+                "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": f"Sentinel thread: {datetime.today().date()}"
+                        }
+            }]
+        )
+
         for blocks in blocks_chunk:
-            response = requests.post(slack_webhook_url, json={
-                                     "text": "", "blocks": blocks})
-            if not response.ok:
-                print(response.text)
+            self.slack_client.chat_postMessage(
+                channel=channel_name,
+                text="Sentinel",
+                thread_ts=message_response.get("ts"),
+                blocks=blocks,
+            )
