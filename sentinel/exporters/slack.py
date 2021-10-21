@@ -144,15 +144,17 @@ class SlackExporter(CSVExporter):
         blocks_chunk = self._chunk_blocks(message_blocks, 50)
         channel_name = self.config.get("export", {}).get(
             "slack", {}).get("channel_name")
+        language_code = self.config.get("language_code", "unknown_language")
+        publish_message = f"Sentinel thread: {datetime.today().date()} ({language_code})"
 
         message_response = self.slack_client.chat_postMessage(
             channel=channel_name,
-            text=f"Sentinel thread: {datetime.today().date()}",
+            text=publish_message,
             blocks=[{
                 "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": f"Sentinel thread: {datetime.today().date()}"
+                            "text": publish_message,
                         }
             }]
         )
