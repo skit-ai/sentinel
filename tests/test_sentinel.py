@@ -3,7 +3,7 @@ import pandas as pd
 
 from sentinel import __version__
 from sentinel.filters.confidence import ASRConfidenceFilter
-from sentinel.filters.alternatives import AlternativesFilter
+from sentinel.filters.alternatives import AlternativesFilter, WordFilter
 from sentinel.filters.prediction import PredictionConfidenceFilter
 from sentinel.filters.state import EndStateFilter
 from sentinel.dataframes.reader import CSVReader
@@ -103,6 +103,25 @@ def test_end_state_filter():
     csv_exporter = CSVExporter()
     df_processed = csv_exporter._get_df_for_category(df_processed,
                                                      "call_end_state")
+
+    pd.testing.assert_series_equal(
+        df_processed.call_uuid, df_expected.call_uuid, check_index=False)
+
+
+def test_filter_words_filter():
+    csv_reader = CSVReader(f"{package_dir}/resources/records.csv")
+    df = csv_reader.read()
+
+    csv_reader = CSVReader(
+        f"{package_dir}/resources/filter_words.csv")
+    df_expected = csv_reader.read()
+
+    word_filter = WordFilter(**{"word_list": ["customer"]})
+    df_processed = word_filter.process(df)
+
+    csv_exporter = CSVExporter()
+    df_processed = csv_exporter._get_df_for_category(df_processed,
+                                                     "filter_words")
 
     pd.testing.assert_series_equal(
         df_processed.call_uuid, df_expected.call_uuid, check_index=False)
