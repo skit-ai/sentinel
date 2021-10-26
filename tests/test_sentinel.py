@@ -5,7 +5,7 @@ from sentinel import __version__
 from sentinel.filters.confidence import ASRConfidenceFilter
 from sentinel.filters.alternatives import AlternativesFilter, WordFilter
 from sentinel.filters.prediction import PredictionConfidenceFilter
-from sentinel.filters.state import EndStateFilter
+from sentinel.filters.state import EndStateFilter, RepeatedCallState, LoopCallState
 from sentinel.dataframes.reader import CSVReader
 from sentinel.exporters.csv import CSVExporter
 
@@ -108,6 +108,25 @@ def test_end_state_filter():
         df_processed.call_uuid, df_expected.call_uuid, check_index=False)
 
 
+def test_state_stuck_filter():
+    csv_reader = CSVReader(f"{package_dir}/resources/records.csv")
+    df = csv_reader.read()
+
+    csv_reader = CSVReader(
+        f"{package_dir}/resources/state_stuck.csv")
+    df_expected = csv_reader.read()
+
+    repeated_call_state_filter = RepeatedCallState(**{"max_state_count": 4})
+    df_processed = repeated_call_state_filter.process(df)
+
+    csv_exporter = CSVExporter()
+    df_processed = csv_exporter._get_df_for_category(df_processed,
+                                                     "state_stuck")
+
+    pd.testing.assert_series_equal(
+        df_processed.call_uuid, df_expected.call_uuid, check_index=False)
+
+
 def test_filter_words_filter():
     csv_reader = CSVReader(f"{package_dir}/resources/records.csv")
     df = csv_reader.read()
@@ -122,6 +141,25 @@ def test_filter_words_filter():
     csv_exporter = CSVExporter()
     df_processed = csv_exporter._get_df_for_category(df_processed,
                                                      "filter_words")
+
+    pd.testing.assert_series_equal(
+        df_processed.call_uuid, df_expected.call_uuid, check_index=False)
+
+
+def test_state_loop_filter():
+    csv_reader = CSVReader(f"{package_dir}/resources/records.csv")
+    df = csv_reader.read()
+
+    csv_reader = CSVReader(
+        f"{package_dir}/resources/state_loop.csv")
+    df_expected = csv_reader.read()
+
+    word_filter = LoopCallState()
+    df_processed = word_filter.process(df)
+
+    csv_exporter = CSVExporter()
+    df_processed = csv_exporter._get_df_for_category(df_processed,
+                                                     "state_loop")
 
     pd.testing.assert_series_equal(
         df_processed.call_uuid, df_expected.call_uuid, check_index=False)
