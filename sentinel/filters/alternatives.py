@@ -69,6 +69,5 @@ class WordFilter(FilterBase):
         item = sorted(item, key=lambda x: x["confidence"], reverse=True)
 
         if any(word in item[0]["transcript"] for word in self.word_list):
-            print(item[0]["transcript"])
             return {"word_match": self.word_list}
         return None
