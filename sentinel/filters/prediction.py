@@ -40,7 +40,6 @@ class PredictionConfidenceFilter(FilterBase):
         if not item:
             return None
 
-        if item["score"] < float(self.confidence_threshold):
         if float(item["score"]) < float(self.confidence_threshold):
             return {"score": item["score"]}
         return None
