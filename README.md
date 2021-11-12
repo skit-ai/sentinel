@@ -1,4 +1,4 @@
-<h3 align="center">Sentinel</h3>
+<h2 align="center">Sentinel</h2>
 <p align="center"><img src="https://i.imgur.com/nYjpNQs.png" width="200px"/></p>
 
 <p align="center">Skit's call monitoring and filtering framework.</p></br>
