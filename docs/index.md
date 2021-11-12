@@ -7,7 +7,7 @@ title: Home
 nav_order: 1
 ---
 
-# Sentinel
+<h1 align="center">Sentinel</h1>
 
 <p align="center"><img src="https://i.imgur.com/nYjpNQs.png" width="200px"/></p>
 
