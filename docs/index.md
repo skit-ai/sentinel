@@ -49,14 +49,17 @@ This will give a list of available filter names and their description like below
 ```
 Available filter functions:
 
-+---------------------------+-----------------------------------+
-| filters                   |            description            |
-+---------------------------+-----------------------------------+
-| no_alternatives           |    Turns with no alternatives     |
-| low_asr_confidence        |     Low ASR confidence turns      |
-| prediction_low_confidence |  Low prediction confidence turns  |
-| call_end_state            | Calls with a particular end state |
-+---------------------------+-----------------------------------+
++---------------------------+------------------------------------------------+
+| filters                   |                  description                   |
++---------------------------+------------------------------------------------+
+| no_alternatives           |           Turns with no alternatives           |
+| filter_words              |            Turns with certain words            |
+| low_asr_confidence        |            Low ASR confidence turns            |
+| prediction_low_confidence |        Low prediction confidence turns         |
+| call_end_state            |       Calls with a particular end state        |
+| state_stuck               |   Calls which are stuck in particular state    |
+| state_loop                | Calls which come back to already visited state |
++---------------------------+------------------------------------------------+
 ```
 
 ## Reporting
