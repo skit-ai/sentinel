@@ -28,7 +28,7 @@ class SlackExporter(CSVExporter):
             str: URL for a call with `call_uuid`
         """
         console_host = os.environ.get("SENTINEL_CONSOLE_HOST")
-        return f"{console_host}{self.config.get('client_id', 1)}/call-report/#/call?uuid={call_uuid}&turnuuid={turn_uuid}"
+        return f"{console_host}/call-report/#/call?uuid={call_uuid}&turnuuid={turn_uuid}%INPUT"
 
     def _write_block(self, message_blocks: List, text: str) -> List:
         """
@@ -98,7 +98,8 @@ class SlackExporter(CSVExporter):
         limit = category_data.get("limit", 50)
 
         # Limit the number of calls to display
-        df = df.drop_duplicates("conversation_uuid")[:limit]
+        df = df.drop_duplicates("conversation_uuid")
+        df = df.drop_duplicates("call_uuid")[:limit]
 
         # Get all available filter functions from registry
         registry = FilterFactory.registry
