@@ -37,7 +37,7 @@ class PredictionConfidenceFilter(FilterBase):
         Returns:
             Metadata dict with annotation.
         """
-        if not item:
+        if not item or item.get("score") is None:
             return None
 
         if float(item["score"]) < float(self.confidence_threshold):
