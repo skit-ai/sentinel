@@ -1,6 +1,6 @@
 import os
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Iterator
 
 import pandas as pd
@@ -27,6 +27,19 @@ class SlackExporter(CSVExporter):
         Returns:
             str: URL for a call with `call_uuid`
         """
+
+        # If S3 host is set then generate call reference url of the format
+        # https://s3.amazonaws.com/{previous_day}/{call_uuid}.mp3
+        # This works on the assumption that S3 URL is of a set format and
+        # always for previous day.
+        s3_url = os.environ.get("SENTINEL_S3_HOST")
+        file_format = os.environ.get("SENTINEL_S3_FILE_FORMAT", "mp3")
+        if s3_url:
+            previous_day = datetime.today() - timedelta(days=1)
+            previous_day = previous_day.strftime("%Y-%m-%d")
+            return f"{s3_url}/{previous_day}/{call_uuid}.{file_format}"
+
+        # Use console url if S3 host is not set
         console_host = os.environ.get("SENTINEL_CONSOLE_HOST")
         return f"{console_host}/call-report/#/call?uuid={call_uuid}&turnuuid={turn_uuid}%INPUT"
 
