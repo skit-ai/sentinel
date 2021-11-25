@@ -41,7 +41,8 @@ class SlackExporter(CSVExporter):
 
         # Use console url if S3 host is not set
         console_host = os.environ.get("SENTINEL_CONSOLE_HOST")
-        return f"{console_host}/call-report/#/call?uuid={call_uuid}&turnuuid={turn_uuid}%INPUT"
+        client_id = self.config.get("client_id", "")
+        return f"{console_host}{client_id}/call-report/#/call?uuid={call_uuid}&turnuuid={turn_uuid}%INPUT"
 
     def _write_block(self, message_blocks: List, text: str) -> List:
         """
