@@ -10,6 +10,16 @@ from sentinel.filters.base import FilterBase, FilterFactory
 
 @FilterFactory.register(name="call_end_state", description="Calls with a particular end state")
 class EndStateFilter(FilterBase):
+    """
+    This filter flags out calls with a particular end state.
+
+
+    Use the below keyword arguments in the config to specify configurable
+    attributes.
+    kwargs:
+        end_state: list of strings of the end state(s) to filter out.
+    """
+
     def __init__(self, *args, **kwargs):
         self.end_state = kwargs.get("end_state", ["COF"])
 
@@ -43,6 +53,17 @@ class EndStateFilter(FilterBase):
 
 @FilterFactory.register(name="state_stuck", description="Calls which are stuck in particular state")
 class RepeatedCallState(FilterBase):
+    """
+    This filter flags out calls which are stuck in a particular state.
+
+    Parameters:
+        max_state_count: int, the maximum number of times a state can be repeated.
+
+    Current dataframe consist of user and bot turn hence for a call to be stuck
+    at a state `SAMPLE_STATE` for 5 consecutive turns, the `max_state_count`
+    value must be 5.
+    """
+
     def __init__(self, *args, **kwargs):
         self.max_state_count = kwargs.get("max_state_count", 4)
 
@@ -76,6 +97,14 @@ class RepeatedCallState(FilterBase):
 
 @FilterFactory.register(name="state_loop", description="Calls which come back to already visited state")
 class LoopCallState(FilterBase):
+    """
+    This filter flags out calls where the call comes back to an already visited state.
+
+    A user might be on a state for multiple turns but once they move to a
+    different turn and again come back to the visited turn, this filter flags
+    them.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

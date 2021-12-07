@@ -10,6 +10,12 @@ from sentinel.filters.base import FilterBase, FilterFactory
 
 @FilterFactory.register(name="no_alternatives", description="Turns with no alternatives")
 class AlternativesFilter(FilterBase):
+    """
+    This filter reports turns with no alternatives.
+
+    In most of the cases, these are turns where users are unresponsive.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -38,6 +44,14 @@ class AlternativesFilter(FilterBase):
 
 @FilterFactory.register(name="filter_words", description="Turns with certain words")
 class WordFilter(FilterBase):
+    """
+    This filter can be used to flag out turns with certain words.
+
+    Use the below keyword arguments in the config to specify configurable attributes.
+    kwargs:
+        word_list (list): List of words to be flagged out.
+    """
+
     def __init__(self, *args, **kwargs):
         self.word_list = kwargs.get("word_list", [])
 

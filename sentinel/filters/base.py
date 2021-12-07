@@ -99,7 +99,8 @@ class FilterFactory:
             if name in cls.registry:
                 print("Executor {name} already exists. Replacing it")
             cls.registry[name] = {"class": wrapped_class,
-                                  "description": description}
+                                  "description": description,
+                                  "verbose": wrapped_class.__doc__}
             return wrapped_class
 
         return inner_wrapper

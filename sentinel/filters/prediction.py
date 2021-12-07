@@ -11,6 +11,15 @@ from sentinel.filters.base import FilterBase, FilterFactory
 
 @FilterFactory.register(name="prediction_low_confidence", description="Low prediction confidence turns")
 class PredictionConfidenceFilter(FilterBase):
+    """
+    This filter flags turns with SLU prediction confidence less than some threshold.
+
+    Use the below keyword arguments in the config to specify configurable
+    attributes.
+    kwargs:
+        confidence_threshold (float): Confidence threshold.
+    """
+
     def __init__(self, *args, **kwargs):
         self.confidence_threshold = kwargs.get("confidence_threshold", 0.95)
 

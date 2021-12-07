@@ -3,10 +3,11 @@ sentinel: anomalous call monitoring framework.
 
 Usage:
   sentinel run --config-yml=<config-yml>
-  sentinel list
+  sentinel list [--verbose]
 
 Options:
   --config-yml=<config-yml>      Path to file with sentinel configs.
+  --verbose                      Print verbose description of filters.
 """
 import io
 from docopt import docopt
@@ -62,10 +63,15 @@ def main():
             slack_exporter.export_report(df_list, filters)
 
     elif args["list"]:
+        is_verbose = args.get("--verbose")
         headers = ["filters", "description"]
         table_data = []
+
         for name, factory_item in FilterFactory.registry.items():
-            table_data.append((name, factory_item.get('description')))
+            if is_verbose:
+                table_data.append((name, factory_item.get('verbose')))
+            else:
+                table_data.append((name, factory_item.get('description')))
 
         print("Available filter functions:\n")
-        print(tabulate(table_data, headers, tablefmt="pretty", colalign=("left",)))
+        print(tabulate(table_data, headers, tablefmt="grid", colalign=("left",)))
