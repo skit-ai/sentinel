@@ -14,7 +14,7 @@ package_dir = os.path.dirname(os.path.realpath(__file__))
 
 
 def test_version():
-    assert __version__ == '0.2.5'
+    assert __version__ == '0.2.6'
 
 
 def test_csv_reader():
