@@ -4,9 +4,10 @@ from typing import List, Dict
 
 import pandas as pd
 
-from sentinel.exporters.base import Exporter
+from sentinel.exporters.base import Exporter, ExporterFactory
 
 
+@ExporterFactory.register(exporter_name="csv", description="CSV Exporter")
 class CSVExporter(Exporter):
     """
     CSV report exporter.

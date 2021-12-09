@@ -3,7 +3,8 @@ sentinel: anomalous call monitoring framework.
 
 Usage:
   sentinel run --config-yml=<config-yml>
-  sentinel list [--verbose]
+  sentinel list filters [--verbose]
+  sentinel list exporters
 
 Options:
   --config-yml=<config-yml>      Path to file with sentinel configs.
@@ -17,7 +18,7 @@ from tabulate import tabulate
 
 import sentinel.util as util
 from sentinel.filters.base import FilterFactory
-from sentinel.exporters.slack import SlackExporter
+from sentinel.exporters.base import ExporterFactory
 from sentinel.dataframes.reader import CSVReader
 from sentinel import __version__
 
@@ -57,12 +58,23 @@ def main():
         # Start execution of analysis functions
         df_list = filter.handle(df, [])
 
-        export_medium = config.get("export", {})
-        if export_medium.get("slack"):
-            slack_exporter = SlackExporter(config)
-            slack_exporter.export_report(df_list, filters)
+        exporters = list(config.get("export", {}).keys())
 
-    elif args["list"]:
+        # Collect exporters from factory to run
+        # TODO: make instantiation and chaining more readable
+
+        # Instantiate first exporter
+        exporter = ExporterFactory.create_executor(exporters[0], config=config)
+        current_exporter = exporter
+
+        # Chain other exporters to each other
+        for category in exporters[1:]:
+            current_exporter.successor = ExporterFactory.create_executor(category, config=config)
+            current_exporter = current_exporter.successor
+
+        df_list = exporter.handle(df_list, filters)
+
+    elif args["list"] and args["filters"]:
         is_verbose = args.get("--verbose")
         headers = ["filters", "description"]
         table_data = []
@@ -75,3 +87,14 @@ def main():
 
         print("Available filter functions:\n")
         print(tabulate(table_data, headers, tablefmt="grid", colalign=("left",)))
+
+    elif args["list"] and args["exporters"]:
+        headers = ["exporters", "description"]
+        table_data = []
+
+        for name, factory_item in ExporterFactory.registry.items():
+            table_data.append((name, factory_item.get('description')))
+
+        print("Available exporters:\n")
+        print(tabulate(table_data, headers, tablefmt="grid", colalign=("left",)))
+

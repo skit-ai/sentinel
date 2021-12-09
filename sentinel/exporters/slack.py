@@ -7,10 +7,12 @@ import pandas as pd
 from slack_sdk import WebClient
 
 import sentinel.util as util
+from sentinel.exporters.base import ExporterFactory
 from sentinel.exporters.csv import CSVExporter
 from sentinel.filters.base import FilterFactory
 
 
+@ExporterFactory.register(exporter_name="slack", description="Slack Exporter")
 class SlackExporter(CSVExporter):
     def __init__(self, config, *args, **kwargs):
         self.config = config
