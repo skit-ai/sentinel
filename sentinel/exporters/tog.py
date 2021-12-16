@@ -12,7 +12,7 @@ from sentinel.exporters.csv import CSVExporter
 class TogExporter(CSVExporter):
     def __init__(self, config, *args, **kwargs):
         self.config = config
-        self.access_token = Connection(self.config.get("client_id", 1))
+        self.access_token = Connection(self.config.get("client_id", 1)).access_token
 
         super().__init__(*args, **kwargs)
 
