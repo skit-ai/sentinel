@@ -127,6 +127,6 @@ by sentinel.
 
 
 [filter-base]: https://github.com/skit-ai/sentinel/blob/master/sentinel/filters/base.py#L7
-[asr-confidence]: https://github.com/skit-ai/sentinel/blob/master/sentinel/filters/confidence.p
+[asr-confidence]: https://github.com/skit-ai/sentinel/blob/master/sentinel/filters/confidence.py
 [register]: https://github.com/skit-ai/sentinel/blob/master/sentinel/filters/base.py#L89
 [config-spec]: ./config-spec.html
